@@ -1,0 +1,9 @@
+{
+  "name": "DroidScope Dashboard",
+  "short_name": "DroidScope",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#06100b",
+  "theme_color": "#07130e",
+  "icons": []
+}

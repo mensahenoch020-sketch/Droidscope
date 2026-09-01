@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#07130e"><meta name="apple-mobile-web-app-capable" content="yes"><title>DroidScope</title><link rel="manifest" href="manifest.webmanifest"><link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <main id="login" class="center-card">
+    <div class="mark">D</div><p class="eyebrow">ANDROID TESTING</p><h1>DroidScope</h1>
+    <p class="muted">Private, owner-approved device testing.</p>
+    <form id="loginForm"><label>Dashboard password<input id="password" type="password" autocomplete="current-password" required></label><button>Sign in</button><p id="loginError" class="error"></p></form>
+  </main>
+
+  <div id="app" hidden>
+    <header><div><p class="eyebrow">DROIDSCOPE</p><h1>Devices</h1></div><button id="addDevice" class="small">＋ Add device</button></header>
+    <main class="page">
+      <section id="deviceList" class="device-list"></section>
+      <section id="empty" class="empty"><div class="phone-icon">⌁</div><h2>No Android connected</h2><p>Generate a one-time setup token to connect an owner-approved device.</p><button id="emptyAdd">Add Android device</button></section>
+      <section id="detail" hidden>
+        <button id="back" class="link">← All devices</button><div id="deviceHeader"></div>
+        <nav class="tabs"><button data-tab="overview" class="active">Overview</button><button data-tab="notifications">Notifications</button><button data-tab="messages">Imported texts</button><button data-tab="photos">Photos</button><button data-tab="apps">Apps</button><button data-tab="activity">Activity</button></nav>
+        <div id="tabContent"></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="enrollDialog"><button class="close" aria-label="Close">×</button><p class="eyebrow">ADD ANDROID</p><h2>One-time setup</h2><ol><li>Install and open the DroidScope companion.</li><li>Enter this temporary token.</li><li>Tap <b>Connect device</b>.</li></ol><div id="token" class="token">Generating…</div><button id="copyToken">Copy token</button><p id="expiry" class="muted"></p></dialog>
+  <script src="app.js"></script>
+</body></html>
