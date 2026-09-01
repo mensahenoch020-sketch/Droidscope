@@ -15,6 +15,7 @@ DroidScope is a transparent, consent-based Android device testing system. It has
 - Owner-triggered audit of launchable applications
 - Owner-selected JSON message-backup import without replacing the SMS app
 - Installable iPhone dashboard (PWA), JSON report export, and data-deletion controls
+- AES-256-GCM encryption at rest for dashboard records and selected photos
 - Per-device activity history
 - Immediate server-side device revocation
 - No advertising, subscription locks, fake results, hidden icon, lock bypass, or silent permission approval
@@ -26,7 +27,7 @@ Android itself displays and owns sensitive permission screens. DroidScope cannot
 ## Run the dashboard
 
 1. Copy `.env.example` values into your hosting environment.
-2. Set a long `DROIDSCOPE_ADMIN_PASSWORD` and `DROIDSCOPE_DATA_KEY`.
+2. Set a long `DROIDSCOPE_ADMIN_PASSWORD` and a permanent random `DROIDSCOPE_DATA_KEY`. Changing the data key later makes previously encrypted records unreadable.
 3. Run `npm start`.
 4. Open the displayed URL, sign in, and choose **Add device**.
 

@@ -112,7 +112,7 @@ async function api(req, res, url) {
       const [meta, encoded] = body.data.split(',', 2); const bytes = Buffer.from(encoded, 'base64');
       if (bytes.length > 5_000_000) return json(res, 413, { error: 'Photo is too large.' });
       const ext = meta.includes('png') ? 'png' : meta.includes('webp') ? 'webp' : 'jpg';
-      const id = crypto.randomUUID(); fs.writeFileSync(path.join(store.uploads, `${id}.${ext}`), bytes, { mode: 0o600 });
+      const id = crypto.randomUUID(); store.writePhoto(id, ext, bytes);
       store.state.photos.unshift({ id, ext, deviceId: device.id, name: clean(body.name, 180) || `Photo.${ext}`, at: Date.now() });
       store.event(device.id, 'Photo shared', 'The owner selected and shared a photo through Android’s system picker.'); store.save(); return json(res, 201, { ok: true });
     }
@@ -152,7 +152,7 @@ async function api(req, res, url) {
       device.revoked = true; store.event(device.id, 'Access revoked', 'Dashboard access for this companion was revoked.'); store.save(); return json(res, 200, { ok: true });
     }
     if (req.method === 'POST' && action === 'purge') {
-      for (const item of store.state.photos.filter(x => x.deviceId === device.id)) { try { fs.unlinkSync(path.join(store.uploads, `${item.id}.${item.ext}`)); } catch {} }
+      for (const item of store.state.photos.filter(x => x.deviceId === device.id)) store.deletePhoto(item.id, item.ext);
       store.state.notifications = store.state.notifications.filter(x => x.deviceId !== device.id);
       store.state.photos = store.state.photos.filter(x => x.deviceId !== device.id);
       store.state.messages = store.state.messages.filter(x => x.deviceId !== device.id);
@@ -169,9 +169,8 @@ async function api(req, res, url) {
   if (req.method === 'GET' && photo) {
     const item = store.state.photos.find(x => x.id === photo[1]);
     if (!item) return json(res, 404, { error: 'Photo not found.' });
-    const file = path.join(store.uploads, `${item.id}.${item.ext}`);
     res.writeHead(200, { 'content-type': `image/${item.ext === 'jpg' ? 'jpeg' : item.ext}`, 'cache-control': 'private, no-store', 'x-content-type-options': 'nosniff' });
-    return fs.createReadStream(file).pipe(res);
+    return res.end(store.readPhoto(item.id, item.ext));
   }
   return json(res, 404, { error: 'Not found.' });
 }
